@@ -22,7 +22,7 @@ const requestedUserSchema = new Schema({
     required: true,
   },
   name: {
-    type: string,
+    type: String,
     required: true,
   },
   age: {
