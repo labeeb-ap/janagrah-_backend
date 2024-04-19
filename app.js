@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes.js';
-import  wardmemberlogin from './wardMemberLogin.js'
+import wardRouter  from './wardRouter.js';
 
 dotenv.config();
 
@@ -17,7 +17,7 @@ app.get("/", (req, res) => res.send("Hello"));
 
 // Register user routes
 app.use("/user", userRoutes);
-app.use("/wardmemberlogin",wardmemberlogin)
+app.use("/wardmemberlogin",wardMemberLogin)
 
 // Connect to MongoDB
 mongoose.connect("mongodb+srv://labeebap446:JxNN2Fk494gbplqj@cluster0.ovqhyfr.mongodb.net/", {
