@@ -1,22 +1,27 @@
 import express from 'express';
-import RequestedUser from '../models/RequestedUsers.js';
-import VerifiedUser from '../models/VerifiedUsers.js';
+import RequestedUsers from "../models/RequestedUsers.js";
+
+
 
 const router = express.Router();
 
+
+
+
 router.post('/request-user', async (req, res) => {
     try {
-        const { state,district,gramaPanchayat,wardNo,name,age,job,address,email,username,password,annualIncome } = req.body;
+        const { state, district, localgovernment, wardNo, name, age, phone, job, address, email, username, password, annualIncome } = req.body;
         //const {password} = req.body;
-        console.error(password);
+        console.log(req.body);
 
-        const user = new RequestedUser({
+        const user = new RequestedUsers({
             state,
             district,
-            gramaPanchayat,
+            localgovernment,
             wardNo,
             name,
             age,
+            phone,
             job,
             address,
             email,
@@ -32,7 +37,7 @@ router.post('/request-user', async (req, res) => {
         await user.save();
 
         // Send a success response
-        res.status(201).json({ message: 'User registered successfully', user });
+        //res.status(201).json({ message: 'User registered successfully', user });
     } catch (error) {
         // If an error occurs, send an error response
         console.error('Error in user registration:', error);
@@ -40,17 +45,8 @@ router.post('/request-user', async (req, res) => {
     }
 });
 
-router.get("/verify-user/:user_id", async (req,res) => {
-    const { user_id } = req.params;
 
-    console.log(user_id)
-
-    const requed_user = await RequestedUser.findById(user_id)
-
-    res.send(requed_user)
 
     
-
-})
 
 export default router;
