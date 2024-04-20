@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const verifiedUserSchema = new mongoose.Schema({
   username: String,
@@ -8,5 +8,5 @@ const verifiedUserSchema = new mongoose.Schema({
 
 const VerifiedUsers = mongoose.model('verifiedusers', verifiedUserSchema);
 
-module.exports = VerifiedUsers;
+export default  VerifiedUsers;
    
