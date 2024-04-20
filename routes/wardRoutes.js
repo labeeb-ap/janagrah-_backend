@@ -17,16 +17,18 @@ router.post('/wardlogin', async (req, res) => {
     if (user) {
       console.log('exist');
       console.log(user);
-      res.json({
+      /*res.json({
         "code": 200,
         "data": user
-      })
+      })*/
+      res.status(200).json({ success: true, message: 'Ward Member Login successful' });
     } else {
-      res.json({
+      /*res.json({
         "code": 100,
         "message": "Ward Member does not exist"
-      })
+      })*/
       console.log('not exist');
+      res.status(200).json({ success: false, message: ' ward member Login unsuccessful' });
     }
 
   } catch (error) {
@@ -46,16 +48,18 @@ router.post('/userlogin', async (req, res) => {
     if (user) {
       console.log('exist')
       console.log(user);
-      res.json({
-        "code": 200,
-        "data": user
-      })
+      //res.json({
+       // "code": 200,
+       // "data": user
+      //})
+      res.status(200).json({ success: true, message: 'Login successful' });
     } else {
       console.log('not exist')
-      res.json({
+      /*res.json({
         "code": 100,
         "message": "User does not exist"
-      })
+      })*/
+      res.status(200).json({ success: false, message: 'Login unsuccessful' })
     }
 
   } catch (error) {
