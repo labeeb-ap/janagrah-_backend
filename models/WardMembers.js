@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const wardMemberSchema = new mongoose.Schema({
   username: String,
@@ -8,5 +8,4 @@ const wardMemberSchema = new mongoose.Schema({
 
 const WardMembers = mongoose.model('wardmembers', wardMemberSchema);
 
-module.exports = WardMembers;
-   
+export default WardMembers;

@@ -17,7 +17,7 @@ const requestedUserSchema = new Schema({
     type: String,
     required: true,
   },
-  wardno: {
+  wardNo: {
     type: Number,
     required: true,
   },
@@ -26,6 +26,10 @@ const requestedUserSchema = new Schema({
     required: true,
   },
   age: {
+    type: Number,
+    required: true
+  },
+  phone: {
     type: Number,
     required: true
   },
@@ -54,7 +58,7 @@ const requestedUserSchema = new Schema({
     required: true,
     unique: true
   },
-  annualincom: {
+  annualIncome: {
     type: Number,
     required: true
   },
