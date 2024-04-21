@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes.js';
 import wardRoutes from './routes/wardRoutes.js';
-
+import newsRoutes from './routes/newsRoutes.js'
 
 dotenv.config();
 
@@ -19,7 +19,7 @@ app.get("/", (req, res) => res.send("Hello"));
 // Register user routes
 app.use("/user", userRoutes);
 app.use("/login",wardRoutes);
-
+app.use('/announcement',newsRoutes);
 // Connect to MongoDB
 mongoose.connect("mongodb+srv://labeebap446:JxNN2Fk494gbplqj@cluster0.ovqhyfr.mongodb.net/", {
     useNewUrlParser: true,
