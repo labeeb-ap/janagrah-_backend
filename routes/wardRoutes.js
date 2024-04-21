@@ -15,15 +15,17 @@ router.post('/wardlogin', async (req, res) => {
    
     if (user) {
       console.log('Ward member exists:', user);
-      res.json({
+      res.status(200).json({
         "code": 200,
-        "data": user
+        "data": user,
+        "success": true
       });
     } else {
       console.log('Ward member does not exist');
       res.status(404).json({
         "code": 100,
-        "message": "Ward Member does not exist"
+        "message": "Ward Member does not exist",
+        "success":true
       });
     }
 
