@@ -1,12 +1,7 @@
 import express from 'express';
 import RequestedUsers from "../models/RequestedUsers.js";
 
-
-
 const router = express.Router();
-
-
-
 
 router.post('/request-user', async (req, res) => {
     try {
