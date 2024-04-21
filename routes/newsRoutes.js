@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post('/create', async (req, res) => {
     try {
-        const { state, district, localgovernment,wardno,message } = req.body;
+        const { state, district, localgovernment,wardno,title,description,uploadEvent,uploadService} = req.body;
         //const {password} = req.body;
         console.log(req.body);
 
@@ -13,8 +13,11 @@ router.post('/create', async (req, res) => {
             state,
             district,
             localgovernment,
-            wardNo,
-            message,
+            wardno,
+            title,
+            description,
+            uploadEvent,
+            uploadService,
             createdAt: Date.now() // Use Date.now() to get current timestamp
             
         }
