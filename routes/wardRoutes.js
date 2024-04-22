@@ -73,8 +73,6 @@ router.post('/userlogin', async (req, res) => {
   }
 });
 
-
-
 router.post('/userRequests', async (req, res) => {
   try {
     const { state, district, localgovernment, wardNo } = req.body;
