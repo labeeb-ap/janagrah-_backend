@@ -13,7 +13,7 @@ const requestedUserSchema = new Schema({
     type: String,
     required: true,
   },
-  localgovernment: {
+  localAuthorities: {
     type: String,
     required: true,
   },

@@ -5,6 +5,8 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes.js';
 import wardRoutes from './routes/wardRoutes.js';
+import pollRoutes from './routes/pollRoutes.js';
+
 
 
 dotenv.config();
@@ -19,6 +21,8 @@ app.get("/", (req, res) => res.send("Hello"));
 // Register user routes
 app.use("/user", userRoutes);
 app.use("/login",wardRoutes);
+app.use("/poll",pollRoutes);
+
 
 // Connect to MongoDB
 mongoose.connect("mongodb+srv://labeebap446:JxNN2Fk494gbplqj@cluster0.ovqhyfr.mongodb.net/", {

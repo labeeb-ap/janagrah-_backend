@@ -5,14 +5,14 @@ const router = express.Router();
 
 router.post('/request-user', async (req, res) => {
     try {
-        const { state, district, localgovernment, wardNo, name, age, phone, job, address, email, username, password, annualIncome } = req.body;
+        const { state, district, localAuthorities, wardNo, name, age, phone, job, address, email, username, password, annualIncome } = req.body;
         //const {password} = req.body;
         console.log(req.body);
 
         const user = new RequestedUsers({
             state,
             district,
-            localgovernment,
+            localAuthorities,
             wardNo,
             name,
             age,
