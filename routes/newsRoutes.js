@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post('/create', async (req, res) => {
     try {
-        const { state, district, localgovernment,wardno,title,description,uploadEvent,uploadService} = req.body;
+        const { state, district, localgovernment,wardno,title,description,uploadEvent} = req.body;
         //const {password} = req.body;
         console.log(req.body);
 
@@ -17,7 +17,6 @@ router.post('/create', async (req, res) => {
             title,
             description,
             uploadEvent,
-            uploadService,
             createdAt: Date.now() // Use Date.now() to get current timestamp
             
         }
@@ -27,11 +26,11 @@ router.post('/create', async (req, res) => {
         await news.save();
 
         // Send a success response
-        res.status(201).json({ message: ' created announcement', news });
+        res.status(201).json({success:true, message: ' created announcement', news });
     } catch (error) {
         // If an error occurs, send an error response
         console.error('Error in creating announcement:', error);
-        res.status(500).json({ message: 'Internal server error' });
+        res.status(500).json({ success:false, message: 'Internal server error' });
     }
 });
 router.post('/delete', async (req, res) => {

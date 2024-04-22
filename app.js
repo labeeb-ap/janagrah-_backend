@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes.js';
 import wardRoutes from './routes/wardRoutes.js';
 import newsRoutes from './routes/newsRoutes.js'
-import session from 'express-session';
+
 dotenv.config();
 
 const app = express();
@@ -14,13 +14,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Session middleware setup
-app.use(session({
-    secret: 'janagrah',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false } // Set secure to true if using HTTPS
-  }));
+
 
 app.get("/", (req, res) => res.send("Hello"));
 
