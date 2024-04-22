@@ -3,7 +3,7 @@ import RequestedUsers from "../models/RequestedUsers.js";
 import WardMembers from '../models/WardMembers.js';
 import VerifiedUsers from '../models/userLogin.js';
 import session from 'express-session';
-import jwt from 'jsonwebtoken';
+
 
 const router = express.Router();
 
@@ -55,7 +55,7 @@ router.post('/userlogin', async (req, res) => {
       console.log('exist')
       req.session.user = user;
       console.log(user);
-      const token = jwt.sign({ userId: user._id, username: user.username }, 'janagrah',{ expiresIn: '1h' });
+     // const token = jwt.sign({ userId: user._id, username: user.username }, 'janagrah',{ expiresIn: '1h' });
       res.status(200).json({ success: true, message: 'Login successful' ,user});
     } else {
       console.log('not exist'),

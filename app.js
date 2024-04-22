@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 
 // Session middleware setup
 app.use(session({
-    secret: 'your-secret-key',
+    secret: 'janagrah',
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false } // Set secure to true if using HTTPS
