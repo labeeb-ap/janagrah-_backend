@@ -5,18 +5,14 @@ const router = express.Router();
 
 router.post('/create', async (req, res) => {
     try {
-        const { state, district, localgovernment,wardno,title,description,uploadEvent} = req.body;
+        const {wardid,title,description} = req.body;
         //const {password} = req.body;
         console.log(req.body);
 
         const news = new Announcement({
-            state,
-            district,
-            localgovernment,
-            wardno,
+            wardid,
             title,
             description,
-            uploadEvent,
             createdAt: Date.now() // Use Date.now() to get current timestamp
             
         }

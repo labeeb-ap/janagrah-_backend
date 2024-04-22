@@ -5,24 +5,16 @@ const { Schema } = mongoose;
 
 
 const announcementSchema = new Schema({
-  state: {
+  wardid: {
     type: String,
     required: true,
   },
-  district: {
+  title: {
     type: String,
     required: true,
   },
-  localgovernment: {
-    type: String,
-    required: true,
-  },
-  wardNo: {
-    type: Number,
-    required: true,
-  },
-  message: {
-    type: String,
+  description:{
+    type:String,
     required: true,
   },
   createdAt: {
