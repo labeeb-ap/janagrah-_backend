@@ -34,6 +34,10 @@ const pollSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+   currentstatus: {
+    type: Boolean,
+    default: true,
   }
 });
 

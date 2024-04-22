@@ -15,12 +15,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Session middleware setup
-app.use(session({
-    secret: 'janagrah',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false } // Set secure to true if using HTTPS
-  }));
+
 
 app.get("/", (req, res) => res.send("Hello"));
 

@@ -26,7 +26,8 @@ router.post('/createpoll', async (req, res) => {
             surveyDescription,
             options: validatedOptions,
             username,
-            createdAt: Date.now()
+            createdAt: Date.now(),
+            currentstatus:true
         });
 
         await user.save();
