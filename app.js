@@ -21,7 +21,9 @@ app.get("/", (req, res) => res.send("Hello"));
 // Register user routes
 app.use("/user", userRoutes);
 app.use("/login",wardRoutes);
-app.use('/announcement',newsRoutes);
+app.use("/poll",pollRoutes);
+
+
 // Connect to MongoDB
 mongoose.connect("mongodb+srv://labeebap446:JxNN2Fk494gbplqj@cluster0.ovqhyfr.mongodb.net/", {
     useNewUrlParser: true,
