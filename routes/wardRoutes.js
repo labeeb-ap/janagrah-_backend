@@ -2,9 +2,17 @@ import express from 'express';
 import RequestedUsers from "../models/RequestedUsers.js";
 import WardMembers from '../models/WardMembers.js';
 import VerifiedUsers from '../models/userLogin.js';
+import session from 'express-session';
+
 
 const router = express.Router();
 
+router.use(session({
+  secret: 'janagrah',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set secure to true if using HTTPS
+}));
 //ward login
 router.post('/wardlogin', async (req, res) => {
   try {
@@ -45,14 +53,12 @@ router.post('/userlogin', async (req, res) => {
     const user = await VerifiedUsers.findOne({ username, password });
     if (user) {
       console.log('exist')
+      req.session.user = user;
       console.log(user);
-      //res.json({
-       // "code": 200,
-       // "data": user
-      //})
-      res.status(200).json({ success: true, message: 'Login successful' });
+     // const token = jwt.sign({ userId: user._id, username: user.username }, 'janagrah',{ expiresIn: '1h' });
+      res.status(200).json({ success: true, message: 'Login successful' ,user});
     } else {
-      console.log('not exist')
+      console.log('not exist'),
       /*res.json({
         "code": 100,
         "message": "User does not exist"
@@ -66,8 +72,6 @@ router.post('/userlogin', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
-
-
 
 router.post('/userRequests', async (req, res) => {
   try {
