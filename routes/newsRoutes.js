@@ -53,12 +53,14 @@ router.post('/delete', async (req, res) => {
   });
 router.post('/send', async (req, res) => {
         try {
-            const { state, district, localgovernment,wardno } = req.body;
+            const { wardid } = req.body;
             console.log(req.body);
-            const msg = await Announcement.findOne({ state,district,localgovernment,wardno });
+            console.log(wardid)
+            const msg = await Announcement.find({ wardid: wardid });
+            console.log(msg);
             if (msg) {
                 //console.log('resident fro')
-                console.log(msg);
+                
                 //res.status(200).json({ announcements });
                 res.status(200).json({ success: true, message: 'announcement are send',msg });
               } else {
