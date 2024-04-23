@@ -2,8 +2,6 @@ import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
-
-
 const requestedUserSchema = new Schema({
   state: {
     type: String,
@@ -13,13 +11,13 @@ const requestedUserSchema = new Schema({
     type: String,
     required: true,
   },
-  localAuthorities: {
+  localAuthority: {
     type: String,
     required: true,
   },
-  wardNo: {
+  ward: {
     type: Number,
-    required: true,
+    required: true, // Changed to required
   },
   name: {
     type: String,
@@ -36,7 +34,6 @@ const requestedUserSchema = new Schema({
   job: {
     type: String,
     required: true,
-
   },
   address: {
     type: String,
@@ -56,12 +53,18 @@ const requestedUserSchema = new Schema({
   password: {
     type: String,
     required: true,
-    unique: true
+
   },
   annualIncome: {
     type: Number,
     required: true
   },
+  voterId: {
+    type: String,
+    required: true,
+  
+  },
+  
   createdAt: {
     type: Date,
     default: Date.now
