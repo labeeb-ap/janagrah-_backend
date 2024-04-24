@@ -5,27 +5,28 @@ const router = express.Router();
 
 router.post('/send', async (req, res) => {
     try {
-        const {wardid,title,description} = req.body;
+        const {userid,wardid,message,anonymous} = req.body;
         //const {password} = req.body;
         console.log(req.body);
 
-        const news = new Announcement({
-            wardid,
-            title,
-            description,
-            createdAt: Date.now() // Use Date.now() to get current timestamp
+        const msg = new Message({
+           userid,
+           wardid,
+           message,
+           createdAt: Date.now(), // Use Date.now() to get current timestamp
+           anonymous,
             
         }
     );
 
         // Save the user to the database
-        await news.save();
+        await msg.save();
 
         // Send a success response
-        res.status(201).json({success:true, message: ' created announcement', news });
+        res.status(201).json({success:true, message: ' Successfully send message', msg });
     } catch (error) {
         // If an error occurs, send an error response
-        console.error('Error in creating announcement:', error);
+        console.error('Error in sending message:', error);
         res.status(500).json({ success:false, message: 'Internal server error' });
     }
 });
