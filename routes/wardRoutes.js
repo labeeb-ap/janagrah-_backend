@@ -1,7 +1,7 @@
 import express from 'express';
 import RequestedUsers from "../models/RequestedUsers.js";
 import WardMembers from '../models/WardMembers.js';
-import VerifiedUsers from '../models/userLogin.js';
+import VerifiedUsers from '../models/VerifiedUsers.js';
 
 
 
@@ -70,14 +70,14 @@ router.post('/userlogin', async (req, res) => {
 
 router.post('/userRequests', async (req, res) => {
   try {
-    const { state, district, localgovernment, wardNo } = req.body;
+    const { state, district, localAuthority, ward } = req.body;
 
     // Construct the query based on the provided fields
     const query = {
       state,
       district,
-      localgovernment,
-      wardNo
+      localAuthority,
+      ward
     };
 
     // Find all documents that match the query
@@ -99,27 +99,19 @@ router.post('/userRequests', async (req, res) => {
 
 
 
-// Import the models for VerifiedUser and RequestedUsers
-
 
 router.post('/userapprove', async (req, res) => {
   try {
-    const { userId,username } = req.body; // Corrected to userId
+    const { userId, username } = req.body;
 
-    // Retrieve the username from local storage
-
-    // Find the requested user by ID
     const user = await RequestedUsers.findById(userId);
-    console.log(user) // Corrected to userId
 
     if (user) {
-      // Create a new VerifiedUser document with the required fields
-      const verifiedUser = new VerifiedUsers({
-        wardmemberid: username,
+      const VerifiedUser = new VerifiedUsers({
         state: user.state,
         district: user.district,
-        localgovernment: user.localgovernment,
-        wardNo: user.wardNo,
+        localAuthority: user.localAuthority,
+        ward: user.ward,
         name: user.name,
         age: user.age,
         phone: user.phone,
@@ -128,29 +120,36 @@ router.post('/userapprove', async (req, res) => {
         email: user.email,
         username: user.username,
         password: user.password,
+        voterId: user.voterId,
         annualIncome: user.annualIncome,
-        // Add more fields if needed
+        createdAt: Date.now(),
+        wardmemberid: username
       });
 
-      // Save the verified user to the database
-      await verifiedUser.save();
+      await VerifiedUser.save();
 
-      console.log('User approved and added to VerifiedUser:', verifiedUser);
-      
-      // If the insertion was successful, delete the user from the RequestedUsers collection
-      await RequestedUsers.findByIdAndDelete(userId); // Corrected to userId
+      await RequestedUsers.findByIdAndDelete(userId);
 
-      console.log('User deleted from RequestedUsers collection');
+      console.log('User approved and added to VerifiedUser:', );
       res.status(200).json({ success: true, message: 'User approved and added to VerifiedUser' });
     } else {
-      console.log('No user found with the provided ID:', userId); // Corrected to userId
+      console.log('No user found with the provided ID:', userId);
       res.status(404).json({ success: false, message: 'No user found with the provided ID' });
     }
   } catch (error) {
+    if (error.code === 11000 && error.keyPattern && error.keyPattern.address) {
+      // Duplicate address error
+      console.error('Duplicate address:', error.keyValue.address);
+      return res.status(400).json({ success: false, message: 'Address already exists' });
+    }
+    // Handle other errors
     console.error('Error in approving user:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+
+
 
 
 router.post('/reject', async (req, res) => {

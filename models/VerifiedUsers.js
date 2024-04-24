@@ -11,17 +11,17 @@ const verifiedUserSchema = new Schema({
     type: String,
     required: true,
   },
-  localgovernment: {
+  localAuthority: {
     type: String,
     required: true,
   },
-  wardNo: {
+  ward: {
     type: Number,
     required: true,
   },
   name: {
     type: String,
-    // Remove unique constraint from name field
+    required: true,
   },
   age: {
     type: Number,
@@ -38,22 +38,22 @@ const verifiedUserSchema = new Schema({
   address: {
     type: String,
     required: true,
-    unique: true,
   },
   email: {
     type: String,
     required: true,
-    unique: true,
   },
   username: {
     type: String,
     required: true,
-    unique: true,
   },
   password: {
     type: String,
     required: true,
-    unique: true,
+  },
+  voterId: {
+    type: String,
+    required: true,
   },
   annualIncome: {
     type: Number,
@@ -66,13 +66,6 @@ const verifiedUserSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  verified: {
-    type: Boolean,
-    default: false,
-    required: true,
-  },
 });
 
-const VerifiedUser = mongoose.model('VerifiedUser', verifiedUserSchema);
-
-export default VerifiedUser;
+export default mongoose.model('VerifiedUsers', verifiedUserSchema);
