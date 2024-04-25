@@ -77,8 +77,32 @@ router.post('/send', async (req, res) => {
             res.status(500).json({ message: 'Internal server error' });
         }
 });
-
-
+router.post('/show', async (req, res) => {
+  try {
+      const { wardid } = req.body;
+      console.log(req.body);
+      console.log(wardid)
+      const msg = await Announcement.find({ wardid: wardid });
+      console.log(msg);
+      if (msg) {
+          //console.log('resident fro')
+          
+          //res.status(200).json({ announcements });
+          res.status(200).json({ success: true, message: 'announcement are shown',msg });
+        } else {
+          console.log('not found')
+          /*res.json({
+            "code": 100,
+            "message": "User does not exist"
+          })*/
+          res.status(200).json({ success: false, message: 'Announcement are not shown' })
+        }
+  } catch (error) {
+      // If an error occurs, send an error response
+      console.error('Error in showing announcement:', error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
     
 
