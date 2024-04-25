@@ -53,10 +53,10 @@ router.post('/delete', async (req, res) => {
   });
 router.post('/send', async (req, res) => {
         try {
-            const { wardmemberid } = req.body;
+            const { wardid } = req.body;
             console.log(req.body);
-            console.log(wardmemberid)
-            const msg = await Announcement.find({ wardid: wardmemberid });
+            console.log(wardid)
+            const msg = await Announcement.find({ wardid: wardid });
             console.log(msg);
             if (msg) {
                 //console.log('resident fro')
