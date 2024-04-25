@@ -1,5 +1,7 @@
 import express from 'express';
 import Polls from "../models/Polls.js";
+import result from "../models/result.js";
+
 
 const router = express.Router();
 
@@ -92,6 +94,137 @@ router.post('/showpoll', async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
     }
   });
+
+
+
+
+
+  router.post('/dosurvey', async (req, res) => {
+    try {
+      const { wardmemberid, job } = req.body;
+      console.log(req.body);
+      // Construct the query conditions based on username and targetedSection
+      const query = {
+        username: wardmemberid,
+        $or: [
+          { targetedSection: job }, // Match the job
+          { targetedSection: 'Everyone' } // Include everyone
+        ],
+        currentstatus:true
+      };
+
+      
+      // Fetch all polls based on the constructed query
+      const polls = await Polls.find(query);
+      console.log("querydata",polls)
+  
+      if (polls.length > 0) {
+        // If polls were found, return them
+        res.status(200).json({ success: true, polls });
+      } else {
+        // If no polls were found with the provided criteria
+        console.log('No polls found with the provided criteria');
+        res.status(404).json({ success: false, message: 'No polls found with the provided criteria' });
+      }
+    } catch (error) {
+      console.error('Error fetching polls:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+
+
+
+
+
+
+  router.post('/addresult', async (req, res) => {
+    try {
+      const { surveyId, selectedOptionId, username } = req.body;
+      console.log(req.body);
+  
+      // Check if any document in the collection matches the surveyId and username
+      const existingResult = await result.findOne({ surveyId, username });
+  
+      if (existingResult) {
+        // If a result already exists for the given surveyId and username, return a message
+        console.log('Result already exists for survey:', surveyId, 'and username:', username);
+        return res.status(400).json({ success: false, message: 'you alredy done ' });
+      } else {
+        // If no result exists, add a new result to the collection
+        const newResult = new result({ surveyId, selectedOptionId, username });
+        await newResult.save();
+  
+        // Update the currentStatus parameter to false for the surveyId
+        
+      }
+    } catch (error) {
+      console.error('Error updating survey:', error);
+      return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+  });
+
+
+
+
+
+  router.post('/result', async (req, res) => {
+    try {
+      const { surveyId } = req.body;
+      console.log(req.body);
+  
+      // Find the poll with the given surveyId
+      const poll = await Polls.findOne({ _id: surveyId });
+      console.log(poll);
+  
+      if (!poll) {
+        // If no poll is found, return an error message
+        console.log('Poll not found for surveyId:', surveyId);
+        return res.status(404).json({ success: false, message: 'Poll not found' });
+      }
+  
+      // Traverse each option and extract the IDs and texts
+      const optionData = poll.options.map(option => ({ id: option._id, text: option.text }));
+  
+      // Initialize an object to store the count of datasets for each option
+      const optionCounts = {};
+  
+      // Loop through each option data and count the datasets
+      for (const option of optionData) {
+        const count = await result.countDocuments({ surveyId, selectedOptionId: option.id });
+        optionCounts[option.text] = count;
+      }
+  
+      // Log or return the result
+      console.log(optionCounts);
+      return res.status(200).json({ success: true, optionCounts }); // Pass optionCounts as part of the response
+    } catch (error) {
+      console.error('Error retrieving result:', error);
+      return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+  });
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
   
 
 
