@@ -54,17 +54,18 @@ router.post('/delete', async (req, res) => {
   });
   router.post('/show', async (req, res) => {
     try {
-      const { username } = req.body;
+      console.log("Message show");
+      const { userid} = req.body;
       console.log(req.body)
       
-      // Retrieve polls associated with the provided username
-      const userMsg = await Polls.find({userid:username });
-      console.log(userMsg)
       
+      const userMsg = await Message.find({userid:userid });
+      console.log(userMsg)
+      console.log(userMsg.length);
       if (userMsg.length > 0) {
         // If polls are found, return the list of polls
-        res.status(200).json({ success: true, msg: userMsg });
-      } else {
+        res.status(200).json({ success: true, message:'Message found',userMsg });
+      } else{
         console.log('No Message found for the user:', username);
         res.status(404).json({ success: false, message: 'No Message found for the user' });
       }
