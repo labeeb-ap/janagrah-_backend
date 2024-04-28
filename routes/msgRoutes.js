@@ -32,17 +32,17 @@ router.post('/send', async (req, res) => {
 });
 router.post('/delete', async (req, res) => {
     try {
-      const { annId } = req.body;
+      const { msgId } = req.body;
 
       // Find the requested user by ID
-      const msg = await Announcement.findById(annId);
+      const msg = await Announcement.findById(msgId);
 
       if (msg) {
         // If the user is found, delete the user from the RequestedUsers collection
-        const data = await Announcement.findByIdAndDelete(msgId);
+        await Announcement.findByIdAndDelete(msgId);
   
         console.log('Message deleted from Announcement collection');
-        res.status(200).json({ success: true, message: ' Message deleted from RequestedUsers' ,data});
+        res.status(200).json({ success: true, message: ' Message deleted from RequestedUsers' });
       } else {
         console.log('No message found with the provided ID:', userId);
         res.status(404).json({ success: false, message: 'No message found with the provided ID' });

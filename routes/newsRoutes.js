@@ -34,9 +34,9 @@ router.post('/delete', async (req, res) => {
       const { msgId } = req.body;
 
       // Find the requested user by ID
-      const msg = await Announcement.findById(msgId);
+      const announcement = await Announcement.findById(msgId);
 
-      if (msg) {
+      if (announcement) {
         // If the user is found, delete the user from the RequestedUsers collection
         await Announcement.findByIdAndDelete(msgId);
   
