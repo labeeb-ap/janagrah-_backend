@@ -1,5 +1,5 @@
 import express from 'express';
-import Announcement from "../models/Message.js";
+import Message from "../models/Message.js";
 
 const router = express.Router();
 
@@ -8,7 +8,7 @@ router.post('/send', async (req, res) => {
         const {userid,wardid,message,anonymous} = req.body;
         //const {password} = req.body;
         console.log(req.body);
-
+        console.log(message);
         const msg = new Message({
            userid,
            wardid,
@@ -52,34 +52,27 @@ router.post('/delete', async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
     }
   });
-router.post('/send', async (req, res) => {
-        try {
-            const { wardmemberid } = req.body;
-            console.log(req.body);
-            console.log(wardmemberid)
-            const msg = await Announcement.find({ wardid: wardmemberid });
-            console.log(msg);
-            if (msg) {
-                //console.log('resident fro')
-                
-                //res.status(200).json({ announcements });
-                res.status(200).json({ success: true, message: 'announcement are send',msg });
-              } else {
-                console.log('not found')
-                /*res.json({
-                  "code": 100,
-                  "message": "User does not exist"
-                })*/
-                res.status(200).json({ success: false, message: 'Announcement are not sended' })
-              }
-        } catch (error) {
-            // If an error occurs, send an error response
-            console.error('Error in sending announcement:', error);
-            res.status(500).json({ message: 'Internal server error' });
-        }
-});
-
-
+  router.post('/show', async (req, res) => {
+    try {
+      const { username } = req.body;
+      console.log(req.body)
+      
+      // Retrieve polls associated with the provided username
+      const userMsg = await Polls.find({userid:username });
+      console.log(userMsg)
+      
+      if (userMsg.length > 0) {
+        // If polls are found, return the list of polls
+        res.status(200).json({ success: true, msg: userMsg });
+      } else {
+        console.log('No Message found for the user:', username);
+        res.status(404).json({ success: false, message: 'No Message found for the user' });
+      }
+    } catch (error) {
+      console.error('Error fetching user message:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
 
     
 
