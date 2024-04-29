@@ -35,14 +35,14 @@ router.post('/delete', async (req, res) => {
       const { msgId } = req.body;
 
       // Find the requested user by ID
-      const msg = await Announcement.findById(msgId);
+      const msg = await Message.findById(msgId);
 
       if (msg) {
         // If the user is found, delete the user from the RequestedUsers collection
-        await Announcement.findByIdAndDelete(msgId);
+        await Message.findByIdAndDelete(msgId);
   
-        console.log('Message deleted from Announcement collection');
-        res.status(200).json({ success: true, message: ' Message deleted from RequestedUsers' });
+        console.log('Message deleted from  collection');
+        res.status(200).json({ success: true, message: ' Message deleted from Users' });
       } else {
         console.log('No message found with the provided ID:', userId);
         res.status(404).json({ success: false, message: 'No message found with the provided ID' });
@@ -93,6 +93,22 @@ router.post('/delete', async (req, res) => {
     } catch (error) {
       console.error('Error fetching user message:', error);
       res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+  router.put('/read/:messageId', async (req, res) => {
+    try {
+      // Retrieve the message ID from the request parameters
+      const { messageId } = req.params;
+  
+      // Find the message in the database by its ID and update its read status to true
+      const Read = await Message.findByIdAndUpdate(messageId, { read: true });
+      console.log(Read);
+      // Send a success response
+      res.status(200).send({ message: 'Message read status updated successfully' ,Read});
+    } catch (error) {
+      // If an error occurs, send a 500 internal server error response
+      console.error('Error updating message read status:', error);
+      res.status(500).send({ error: 'Internal server error' });
     }
   });
 

@@ -24,6 +24,10 @@ const messageSchema = new Schema({
   anonymous: {
     type: Boolean,
     default: false,
+  },
+  read:{
+    type:Boolean,
+    default:false,
   }
   
 });
