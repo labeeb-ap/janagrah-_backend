@@ -84,6 +84,7 @@ router.post('/show', async (req, res) => {
       console.log(wardid)
       const msg = await Announcement.find({ wardid: wardid });
       console.log(msg);
+      console.log(msg.length);
       if (msg) {
           //console.log('resident fro')
           
