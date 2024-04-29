@@ -74,6 +74,27 @@ router.post('/delete', async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
     }
   });
+  router.post('/visible', async (req, res) => {
+    try {
+      console.log("Message visible");
+      const { wardid} = req.body;
+      console.log(req.body)
+      
+      
+      const userMsg = await Message.find({wardid:wardid });
+      console.log(userMsg)
+      console.log(userMsg.length);
+      if (userMsg.length > 0) {
+        res.status(200).json({ success: true, message:'Message found',userMsg });
+      } else{
+        console.log('No Message found for the user:', userMsg);
+        res.status(404).json({ success: false, message: 'No Message found for the user' });
+      }
+    } catch (error) {
+      console.error('Error fetching user message:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
 
     
 
