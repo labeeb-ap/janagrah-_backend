@@ -66,7 +66,7 @@ router.post('/delete', async (req, res) => {
         // If polls are found, return the list of polls
         res.status(200).json({ success: true, message:'Message found',userMsg });
       } else{
-        console.log('No Message found for the user:', username);
+        console.log('No Message found for the user:', userMsg);
         res.status(404).json({ success: false, message: 'No Message found for the user' });
       }
     } catch (error) {
