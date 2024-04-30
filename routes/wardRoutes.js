@@ -97,9 +97,6 @@ router.post('/userRequests', async (req, res) => {
 });
 
 
-
-
-
 router.post('/userapprove', async (req, res) => {
   try {
     const { userId, username } = req.body;
@@ -107,6 +104,15 @@ router.post('/userapprove', async (req, res) => {
     const user = await RequestedUsers.findById(userId);
 
     if (user) {
+      // Check if the username already exists in VerifiedUsers collection
+      const existingUser = await VerifiedUsers.findOne({username:user.username });
+
+
+      if (existingUser) {
+        console.log('User with the provided username already exists in VerifiedUsers:', user.username);
+        return res.status(400).json({ success: false, message: 'User with the provided username already approved ' });
+      }
+
       const VerifiedUser = new VerifiedUsers({
         state: user.state,
         district: user.district,
@@ -130,11 +136,11 @@ router.post('/userapprove', async (req, res) => {
 
       await RequestedUsers.findByIdAndDelete(userId);
 
-      console.log('User approved and added to VerifiedUser:', );
-      res.status(200).json({ success: true, message: 'User approved and added to VerifiedUser' });
+      console.log('User approved and added to VerifiedUser:', username);
+      return res.status(200).json({ success: true, message: 'User approved and added to VerifiedUser' });
     } else {
       console.log('No user found with the provided ID:', userId);
-      res.status(404).json({ success: false, message: 'No user found with the provided ID' });
+      return res.status(404).json({ success: false, message: 'No user found with the provided ID' });
     }
   } catch (error) {
     if (error.code === 11000 && error.keyPattern && error.keyPattern.address) {
@@ -144,10 +150,9 @@ router.post('/userapprove', async (req, res) => {
     }
     // Handle other errors
     console.error('Error in approving user:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 });
-
 
 
 
