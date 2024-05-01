@@ -1,5 +1,6 @@
 import express from 'express';
 import RequestedUsers from "../models/RequestedUsers.js";
+import VerifiedUsers from '../models/VerifiedUsers.js';
 
 const router = express.Router();
 
@@ -41,11 +42,12 @@ router.post('/details', async (req, res) => {
       console.log(req.body)
       
       
-      const users = await VerifiedUsers.find({wardid:wardid });
+      const users = await VerifiedUsers.find({wardmemberid:wardid });
       console.log(users)
-      console.log(users.length);
+      const total= users.length
+      console.log(total);
       if (users.length > 0) {
-        res.status(200).json({ success: true, message:'Message found',users });
+        res.status(200).json({ success: true, message:'Message found',users,total });
       } else{
         console.log('No Message found for the user:', userMsg);
         res.status(404).json({ success: false, message: 'No Message found for the user' });
