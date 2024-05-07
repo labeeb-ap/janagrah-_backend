@@ -76,6 +76,22 @@ router.post('/details', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+router.post('/delete', async (req, res) => {
+  try {
+    const { residentId } = req.body;
+    console.log(residentId);
+    const deletedResident = await VerifiedUsers.findByIdAndDelete(residentId);
+    if (deletedResident) {
+      res.json({ success: true, message: 'Resident deleted successfully.' });
+    } else {
+      res.status(404).json({ success: false, message: 'Resident not found.' });
+    }
+  } catch (error) {
+    console.error('Error deleting resident:', error);
+    res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+});
+
 
 
 
