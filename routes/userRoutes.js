@@ -57,6 +57,25 @@ router.post('/details', async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
     }
   });
+  router.post('/edit', async (req, res) => {
+  try {
+    console.log('edit');
+    const updatedData = req.body;
+    console.log(updatedData);
+    // Find the user by username and update the profile
+    const user = await VerifiedUsers.findOneAndUpdate(
+      { username: updatedData.username },
+      updatedData,
+      { new: true }
+    );
+    console.log(user);
+    res.status(200).json({ success: true, message:'successfully edited',user});
+    console.log('successfully edited');
+  } catch (error) {
+    console.error('Error editing profile:', error.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 
 
