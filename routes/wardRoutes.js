@@ -203,7 +203,7 @@ router.post('/viewUser', async (req, res) => {
   
 
     // Find all documents that match the query
-    const users = await VerifiedUsers.find(wardmemberid);
+    const users = await VerifiedUsers.find({wardmemberid:wardmemberid});
 
     if (users.length > 0) {
       console.log('Users found:', users);
