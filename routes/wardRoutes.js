@@ -184,4 +184,57 @@ router.post('/reject', async (req, res) => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+router.post('/viewUser', async (req, res) => {
+  try {
+    const { wardmemberid } = req.body;
+
+    // Construct the query based on the provided fields
+  
+
+    // Find all documents that match the query
+    const users = await VerifiedUsers.find(wardmemberid);
+
+    if (users.length > 0) {
+      console.log('Users found:', users);
+      res.status(200).json({ success: true, data: users });
+    } else {
+      console.log('No users found');
+      res.status(200).json({ success: false, message: 'No users found' });
+    }
+  } catch (error) {
+    console.error('Error in finding users:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export default router;
