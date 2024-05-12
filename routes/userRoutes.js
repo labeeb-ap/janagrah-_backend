@@ -6,8 +6,8 @@ const router = express.Router();
 
 router.post('/request-user', async (req, res) => {
     try {
-        const { state, district, localAuthority, ward, voterId, name, age, phone, job, address, email, username, password, annualIncome } = req.body;
-        console.log(state)
+        const { state, district, localAuthority, ward, voterId, name, age, phone, job, address, email, username, password, annualIncome,image } = req.body;
+        console.log(req.body)
         
         const user = new RequestedUsers({
             state,
@@ -24,6 +24,7 @@ router.post('/request-user', async (req, res) => {
             username,
             password,
             annualIncome,
+            image,
             createdAt: Date.now() 
         });
 
