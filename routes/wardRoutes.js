@@ -12,8 +12,12 @@ const router = express.Router();
 router.post('/wardlogin', async (req, res) => {
   try {
     const { username, password } = req.body;
+<<<<<<< Updated upstream
     console.log('Username:', username);
     console.log('Password:', password);
+=======
+    console.log(req.body)
+>>>>>>> Stashed changes
     const user = await WardMembers.findOne({ username, password });
    
     if (user) {
