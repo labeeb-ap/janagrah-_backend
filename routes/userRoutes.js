@@ -1,19 +1,35 @@
 import express from 'express';
 import RequestedUsers from "../models/RequestedUsers.js";
 import VerifiedUsers from '../models/VerifiedUsers.js';
+import sharp from 'sharp';
+import { v4 as uuidv4 } from 'uuid';
 
 const router = express.Router();
 
 router.post('/request-user', async (req, res) => {
     try {
-        const { state, district, localAuthority, ward, voterId, name, age, phone, job, address, email, username, password, annualIncome,image } = req.body;
-        console.log(req.body)
+        const { state, district, localAuthority, ward, voterId, name, age, phone, job, address, email, username, password, annualIncome, image } = req.body;
         
+        // Compressing image to 20KB
+        const compressedImage = await sharp(Buffer.from(image, 'base64'))
+            .resize({ fit: 'inside', withoutEnlargement: true })
+            .toFormat('jpeg')
+            .jpeg({ quality: 30 }) // Adjust quality as needed
+            .toBuffer();
+
+        // Convert compressed image buffer back to base64
+        const compressedImageBase64 = compressedImage.toString('base64');
+
+        // You can save this compressedImageBase64 to your database or storage system
+        // For example, if using MongoDB with Mongoose, you could do something like:
+        // const imageUrl = `path/to/save/${uuidv4()}.jpg`;
+        // fs.writeFileSync(imageUrl, compressedImageBase64);
+
         const user = new RequestedUsers({
             state,
             district,
-            localAuthority, // Corrected
-            ward, // Corrected
+            localAuthority,
+            ward,
             voterId,
             name,
             age,
@@ -24,7 +40,7 @@ router.post('/request-user', async (req, res) => {
             username,
             password,
             annualIncome,
-            image,
+            image: compressedImageBase64, // Saving compressed image as base64
             createdAt: Date.now() 
         });
 
@@ -36,6 +52,55 @@ router.post('/request-user', async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+
+router.post('/image', async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    // Find the user by username
+    const user = await VerifiedUsers.findOne({ username });
+
+    if (user) {
+      console.log('User found:', user);
+      // Assuming the image data is stored in a field called 'image'
+      res.status(200).json({ success: true, data: { image: user.image } });
+    } else {
+      console.log('No user found');
+      res.status(404).json({ success: false, message: 'No user found' });
+    }
+  } catch (error) {
+    console.error('Error fetching user image:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 router.post('/details', async (req, res) => {
     try {
       console.log("Complete Details of residents");

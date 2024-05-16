@@ -119,6 +119,7 @@ router.post('/userapprove', async (req, res) => {
         localAuthority: user.localAuthority,
         ward: user.ward,
         name: user.name,
+        image:user.image,
         age: user.age,
         phone: user.phone,
         job: user.job,
