@@ -149,7 +149,7 @@ router.post('/showpoll', async (req, res) => {
       if (existingResult) {
         // If a result already exists for the given surveyId and username, return a message
         console.log('Result already exists for survey:', surveyId, 'and username:', username);
-        return res.status(400).json({ success: false, message: 'you alredy done ' });
+        return res.status(400).json({ success: false, message: 'you already done ' });
       } else {
         // If no result exists, add a new result to the collection
         const newResult = new result({ surveyId, selectedOptionId, username });
