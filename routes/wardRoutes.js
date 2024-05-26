@@ -12,17 +12,11 @@ const router = express.Router();
 router.post('/wardlogin', async (req, res) => {
   try {
     const { username, password } = req.body;
-<<<<<<< HEAD
+
     console.log('Username:', username);
     console.log('Password:', password);
     console.log(req.body)
-=======
 
-
-    console.log('Username:', username);
-    console.log('Password:', password);
-
->>>>>>> 696da52718107d4250da2bf54f8a5e73476b75eb
     const user = await WardMembers.findOne({ username, password });
    
     if (user) {
