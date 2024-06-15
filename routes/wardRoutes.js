@@ -229,6 +229,30 @@ router.post('/viewUser', async (req, res) => {
 
 
 
+router.post('/image', async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    // Find the user by username
+    const user = await wardmembers.findOne({ username });
+
+    if (user) {
+      console.log('User found:', user);
+      // Assuming the image data is stored in a field called 'image'
+      res.status(200).json({ success: true, data: { image: user.image } });
+    } else {
+      console.log('No user found');
+      res.status(404).json({ success: false, message: 'No user found' });
+    }
+  } catch (error) {
+    console.error('Error fetching user image:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+
+
 
 
 
