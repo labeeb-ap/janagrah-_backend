@@ -101,21 +101,31 @@ router.post('/showpoll', async (req, res) => {
 
   router.post('/dosurvey', async (req, res) => {
     try {
-      const { wardmemberid, job } = req.body;
+      const { wardmemberid, job,username } = req.body;
       console.log(req.body);
       // Construct the query conditions based on username and targetedSection
-      const query = {
-        username: wardmemberid,
-        $or: [
-          { targetedSection: job }, // Match the job
-          { targetedSection: 'Everyone' } // Include everyone
-        ],
-        currentstatus:true
-      };
+     // Step 1: Fetch all surveys that have already been done by the user
+const doneSurveys = await result.find({ username: username });
+console.log("done",doneSurveys)
 
-      
-      // Fetch all polls based on the constructed query
-      const polls = await Polls.find(query);
+// Step 2: Extract the survey IDs
+const doneSurveyIds = doneSurveys.map(survey => survey.surveyId); 
+console.log("sureveydones",doneSurveyIds);
+
+// Step 3: Construct the query to exclude done surveys
+const query = {
+  username: wardmemberid, // Match the username with wardmemberid
+  $or: [
+    { targetedSection: job }, // Either the targetedSection matches the job
+    { targetedSection: 'Everyone' } // or the targetedSection is 'Everyone'
+  ],
+  currentstatus: true, // and the currentstatus is true
+  _id: { $nin: doneSurveyIds } // Exclude surveys already done
+};
+
+// Fetch all polls based on the constructed query
+const polls = await Polls.find(query);
+
       console.log("querydata",polls)
   
       if (polls.length > 0) {
@@ -154,6 +164,8 @@ router.post('/showpoll', async (req, res) => {
         // If no result exists, add a new result to the collection
         const newResult = new result({ surveyId, selectedOptionId, username });
         await newResult.save();
+        return res.status(200).json({ success: true, message: 'Survey result recorded successfully.' });
+
   
         // Update the currentStatus parameter to false for the surveyId
         
