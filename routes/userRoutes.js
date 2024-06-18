@@ -25,6 +25,13 @@ router.post('/request-user', async (req, res) => {
         // const imageUrl = `path/to/save/${uuidv4()}.jpg`;
         // fs.writeFileSync(imageUrl, compressedImageBase64);
 
+        const existingUserWithUname = RequestedUsers.find({'username':username});
+        const existingUserWithEmail = RequestedUsers.find({'email':email});
+        if(existingUserWithUname||existingUserWithEmail){
+          return res.status(400).json({message: 'Username or Email already exists'});
+        }
+
+
         const user = new RequestedUsers({
             state,
             district,
@@ -48,8 +55,8 @@ router.post('/request-user', async (req, res) => {
 
         res.status(201).json({ message: 'User registered successfully', user });
     } catch (error) {
-        console.error('Error in user registration:', error);
-        res.status(500).json({ message: 'Internal server error' });
+        console.log('Error in user registration:', error);
+        res.status(500).json({ message:error });
     }
 });
 
