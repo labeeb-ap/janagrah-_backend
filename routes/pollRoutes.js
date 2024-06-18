@@ -50,7 +50,7 @@ router.post('/showpoll', async (req, res) => {
       console.log(req.body)
       
       // Retrieve polls associated with the provided username
-      const userPolls = await Polls.find({username:username,currentstatus: true });
+      const userPolls = await Polls.find({username:username });
       console.log(userPolls)
       
       if (userPolls.length > 0) {
