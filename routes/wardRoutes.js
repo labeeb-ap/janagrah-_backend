@@ -2,7 +2,7 @@ import express from 'express';
 import RequestedUsers from "../models/RequestedUsers.js";
 import WardMembers from '../models/WardMembers.js';
 import VerifiedUsers from '../models/VerifiedUsers.js';
-
+import nodemailer from 'nodemailer';
 
 
 const router = express.Router();
@@ -251,6 +251,129 @@ router.post('/image', async (req, res) => {
 });
 
 
+router.post('/forgot', async (req, res) => {
+  try {
+    
+    const { email } = req.body;
+    ;
+    // Find the user by username
+    const user = await VerifiedUsers.findOne({ email });
+    const ward = await wardmembers.findOne({ email });
+    if (user) {
+      
+      var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'akakhome22@gmail.com',
+          pass: 'tjiu lgqe mqlu demz'
+        }
+      });
+      
+      var mailOptions = {
+        from: 'akakhome22@gmail.com',
+        to: email,
+        subject: 'Reset Password ',
+        text: 'http://localhost:3000/ResetPassword'
+      };
+      
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+          res.status(200).json({ success: false, message:"error sending email" });
+        } else {
+          console.log('Email sent: ' + info.response);
+          res.status(200).json({ success: true,message:"email sent" });
+        }
+      });
+      
+    } else {
+      console.log('No user found');
+      res.status(404).json({ success: false, message: 'user not registered' });
+    }
+    if (ward) {
+      
+      var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'akakhome22@gmail.com',
+          pass: 'tjiu lgqe mqlu demz'
+        }
+      });
+      
+      var mailOptions = {
+        from: 'akakhome22@gmail.com',
+        to: email,
+        subject: 'Reset Password ',
+        text: 'http://localhost:3000/ResetPassword'
+      };
+      
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+          res.status(200).json({ success: false, message:"error sending email" });
+        } else {
+          console.log('Email sent: ' + info.response);
+          res.status(200).json({ success: true,message:"email sent" });
+        }
+      });
+      
+    } else {
+      console.log('No member found');
+      res.status(404).json({ success: false, message: 'member not registered' });
+    }
+  } catch (error) {
+    console.error('Error fetching ward:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+router.post('/reset', async (req, res) => {
+  try {
+    console.log('Reset');
+    const { identifier, password } = req.body;
+
+    // Find the user by email, username, or voter ID
+    const user = await VerifiedUsers.findOne({
+      $or: [
+        { email: identifier },
+        { username: identifier },
+        { voterId: identifier }
+      ]
+    });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Update the password
+    user.password = password;
+
+    // Save the updated user
+    await user.save();
+    const ward = await wardmembers.findOne({
+      $or: [
+        { email: identifier },
+        { username: identifier },
+        { voterId: identifier }
+      ]
+    });
+
+    if (!ward) {
+      return res.status(404).json({ success: false, message: 'member not found' });
+    }
+
+    // Update the password
+    ward.password = password;
+
+    // Save the updated user
+    await ward.save();
+
+    res.status(200).json({ success: true, message: 'Password reset successfully' });
+  } catch (error) {
+    console.error('Error resetting password:', error.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 
 
