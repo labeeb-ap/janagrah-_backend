@@ -142,6 +142,7 @@ router.post('/details', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
 router.post('/delete', async (req, res) => {
   try {
     const { residentId } = req.body;
