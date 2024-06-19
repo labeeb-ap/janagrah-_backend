@@ -98,7 +98,24 @@ router.post('/userRequests', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'your-email@gmail.com',
+    pass: 'your-email-password',
+  },
+});
 
+const sendEmail = (to, subject, text) => {
+  const mailOptions = {
+    from: 'your-email@gmail.com',
+    to,
+    subject,
+    text,
+  };
+
+  return transporter.sendMail(mailOptions);
+};
 
 router.post('/userapprove', async (req, res) => {
   try {
@@ -140,6 +157,31 @@ router.post('/userapprove', async (req, res) => {
 
       await RequestedUsers.findByIdAndDelete(userId);
 
+      
+      var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'akakhome22@gmail.com',
+          pass: 'tjiu lgqe mqlu demz'
+        }
+      });
+      
+      var mailOptions = {
+        from: 'akakhome22@gmail.com',
+        to: email,
+        subject: 'Account Approved ',
+        text: 'Your account has been approved.'
+      };
+      
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+          res.status(200).json({ success: false, message:"error sending email" });
+        } else {
+          console.log('Email sent: ' + info.response);
+          res.status(200).json({ success: true,message:"email sent" });
+        }
+      });
       console.log('User approved and added to VerifiedUser:', username);
       return res.status(200).json({ success: true, message: 'User approved and added to VerifiedUser' });
     } else {
@@ -171,6 +213,34 @@ router.post('/reject', async (req, res) => {
     if (user) {
       // If the user is found, delete the user from the RequestedUsers collection
       await RequestedUsers.findByIdAndDelete(userId);
+
+      
+
+      var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'akakhome22@gmail.com',
+          pass: 'tjiu lgqe mqlu demz'
+        }
+      });
+      
+      var mailOptions = {
+        from: 'akakhome22@gmail.com',
+        to: email,
+        subject: 'Account Rejected ',
+        text: 'Your account has been Rejected.'
+      };
+      
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+          res.status(200).json({ success: false, message:"error sending email" });
+        } else {
+          console.log('Email sent: ' + info.response);
+          res.status(200).json({ success: true,message:"email sent" });
+        }
+      });
+      
 
       console.log('User deleted from RequestedUsers collection');
       res.status(200).json({ success: true, message: 'User rejected and deleted from RequestedUsers' });

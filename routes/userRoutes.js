@@ -25,11 +25,11 @@ router.post('/request-user', async (req, res) => {
         // const imageUrl = `path/to/save/${uuidv4()}.jpg`;
         // fs.writeFileSync(imageUrl, compressedImageBase64);
 
-        const existingUserWithUname = RequestedUsers.find({'username':username});
+        /*const existingUserWithUname = RequestedUsers.find({'username':username});
         const existingUserWithEmail = RequestedUsers.find({'email':email});
         if(existingUserWithUname||existingUserWithEmail){
           return res.status(400).json({message: 'Username or Email already exists'});
-        }
+        }*/
 
 
         const user = new RequestedUsers({
