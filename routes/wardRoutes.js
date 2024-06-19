@@ -168,7 +168,7 @@ router.post('/userapprove', async (req, res) => {
       
       var mailOptions = {
         from: 'akakhome22@gmail.com',
-        to: email,
+        to: user.email,
         subject: 'Account Approved ',
         text: 'Your account has been approved.'
       };
@@ -226,7 +226,7 @@ router.post('/reject', async (req, res) => {
       
       var mailOptions = {
         from: 'akakhome22@gmail.com',
-        to: email,
+        to: user.email,
         subject: 'Account Rejected ',
         text: 'Your account has been Rejected.'
       };
@@ -328,7 +328,7 @@ router.post('/forgot', async (req, res) => {
     ;
     // Find the user by username
     const user = await VerifiedUsers.findOne({ email });
-    const ward = await wardmembers.findOne({ email });
+    const ward = await WardMembers.findOne({ email });
     if (user) {
       
       var transporter = nodemailer.createTransport({
@@ -420,7 +420,7 @@ router.post('/reset', async (req, res) => {
 
     // Save the updated user
     await user.save();
-    const ward = await wardmembers.findOne({
+    const ward = await WardMembers.findOne({
       $or: [
         { email: identifier },
         { username: identifier },
