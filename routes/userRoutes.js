@@ -2,7 +2,6 @@ import express from 'express';
 import RequestedUsers from "../models/RequestedUsers.js";
 import VerifiedUsers from '../models/VerifiedUsers.js';
 import sharp from 'sharp';
-import { v4 as uuidv4 } from 'uuid';
 
 const router = express.Router();
 
@@ -19,18 +18,6 @@ router.post('/request-user', async (req, res) => {
 
         // Convert compressed image buffer back to base64
         const compressedImageBase64 = compressedImage.toString('base64');
-
-        // You can save this compressedImageBase64 to your database or storage system
-        // For example, if using MongoDB with Mongoose, you could do something like:
-        // const imageUrl = `path/to/save/${uuidv4()}.jpg`;
-        // fs.writeFileSync(imageUrl, compressedImageBase64);
-
-        /*const existingUserWithUname = RequestedUsers.find({'username':username});
-        const existingUserWithEmail = RequestedUsers.find({'email':email});
-        if(existingUserWithUname||existingUserWithEmail){
-          return res.status(400).json({message: 'Username or Email already exists'});
-        }*/
-
 
         const user = new RequestedUsers({
             state,
@@ -89,7 +76,7 @@ router.post('/details', async (req, res) => {
       
       
       const users = await VerifiedUsers.find({wardmemberid:wardid });
-      console.log(users)
+      console.log(users);
       const total= users.length
       console.log(total);
       if (users.length > 0) {

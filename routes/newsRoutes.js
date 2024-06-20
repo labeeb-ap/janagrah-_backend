@@ -59,16 +59,10 @@ router.post('/send', async (req, res) => {
             const msg = await Announcement.find({ wardid: wardid });
             console.log(msg);
             if (msg) {
-                //console.log('resident fro')
-                
-                //res.status(200).json({ announcements });
+
                 res.status(200).json({ success: true, message: 'announcement are send',msg });
-              } else {
+             } else {
                 console.log('not found')
-                /*res.json({
-                  "code": 100,
-                  "message": "User does not exist"
-                })*/
                 res.status(200).json({ success: false, message: 'Announcement are not sended' })
               }
         } catch (error) {
@@ -85,16 +79,9 @@ router.post('/show', async (req, res) => {
       const msg = await Announcement.find({ wardid: wardid });
       console.log(msg.length);
       if (msg) {
-          //console.log('resident fro')
-          
-          //res.status(200).json({ announcements });
           res.status(200).json({ success: true, message: 'announcement are shown',msg });
         } else {
-          console.log('not found')
-          /*res.json({
-            "code": 100,
-            "message": "User does not exist"
-          })*/
+          console.log('not found');
           res.status(200).json({ success: false, message: 'Announcement are not shown' })
         }
   } catch (error) {
