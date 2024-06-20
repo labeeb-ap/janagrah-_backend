@@ -3,7 +3,9 @@ import RequestedUsers from "../models/RequestedUsers.js";
 import WardMembers from '../models/WardMembers.js';
 import VerifiedUsers from '../models/VerifiedUsers.js';
 import nodemailer from 'nodemailer';
-
+import bcrypt from 'bcrypt';
+import crypto from 'crypto';
+import PasswordResetToken from '../models/ResetPassword.js';
 
 const router = express.Router();
 
@@ -304,14 +306,16 @@ router.post('/image', async (req, res) => {
 });
 
 
-router.post('/forgot', async (req, res) => {
+/*router.post('/forgot', async (req, res) => {
   try {
     
     const { email } = req.body;
     ;
-    // Find the user by username
-    const user = await VerifiedUsers.findOne({ email });
-    const ward = await WardMembers.findOne({ email });
+   
+
+     // Find the user by email
+     const user = await VerifiedUsers.findOne({ email }) || await WardMembers.findOne({ email });
+
     if (user) {
       
       var transporter = nodemailer.createTransport({
@@ -374,53 +378,127 @@ router.post('/forgot', async (req, res) => {
     console.error('Error fetching ward:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
-});
+});*/
 
-router.post('/reset', async (req, res) => {
+// Route to request a password reset link
+router.post('/forgot', async (req, res) => {
   try {
-    
-    const { identifier, password } = req.body;
+    const { email } = req.body;
 
-    // Find the user by email, username, or voter ID
-    const user = await VerifiedUsers.findOne({
-      $or: [
-        { email: identifier },
-        { username: identifier },
-        { voterId: identifier }
-      ]
-    });
+    // Find the user by email
+    const user = await VerifiedUsers.findOne({ email }) || await WardMembers.findOne({ email });
 
-    
+    if (user) {
+      // Generate a unique token
+      const token = crypto.randomBytes(16).toString('hex');
 
-    // Update the password
-    user.password = password;
-    console.log(user.email)
-    console.log(user.password)
-    // Save the updated user
-    await user.save();
-    const ward = await WardMembers.findOne({
-      $or: [
-        { email: identifier },
-        { username: identifier },
-        { voterId: identifier }
-      ]
-    });
+      // Create a new password reset token and save it
+      const resetToken = new PasswordResetToken({ email, token });
+      await resetToken.save();
+      console.log(resetToken);
+      // Create the transporter for sending email
+      var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'akakhome22@gmail.com',
+          pass: 'tjiu lgqe mqlu demz' // Use your actual app password here
+        }
+      });
 
-    
+      // Email options
+      var mailOptions = {
+        from: 'akakhome22@gmail.com',
+        to: email,
+        subject: 'Reset Password',
+        text: `Click the following link to reset your password: http://localhost:3000/ResetPassword/${token}`
+      };
 
-    // Update the password
-    ward.password = password;
+      // Send the email
+      transporter.sendMail(mailOptions, function(error, info) {
+        if (error) {
+          console.log(error);
+          res.status(500).json({ success: false, message: "Error sending email" });
+        } else {
+          console.log('Email sent: ' + info.response);
+          res.status(200).json({ success: true, message: "Email sent" });
+        }
+      });
 
-    // Save the updated user
-    await ward.save();
-
-    res.status(200).json({ success: true, message: 'Password reset successfully' });
+    } else {
+      res.status(404).json({ success: false, message: 'User not found' });
+    }
   } catch (error) {
-    console.error('Error resetting password:', error.message);
-    res.status(500).send('Server Error');
+    console.error('Error processing request:', error.message);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
+
+// Route to reset password
+router.post('/reset-password/:token', async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+    console.log(token);
+    console.log(password);
+    const resetToken = await passwordresettokens.findOne({ token:token });
+
+    // Validate token and password format/length here
+
+
+    if (!/^[0-9a-fA-F]{32}$/.test(token)) {
+      console.log('Invalid token format',token);
+      return res.status(400).json({ success: false, message: 'Invalid token format' });
+    }
+    if (!password || typeof password !== 'string' || password.length < 8) {
+      console.log('password.error');
+      return res.status(400).json({ success: false, message: 'Invalid password format' });
+    }
+
+   
+
+    console.group(resetToken);
+    if (!resetToken) {
+      console.log('resettoken');
+      return res.status(400).json({ success: false, message: 'Invalid or expired reset token' });
+      
+    }
+
+    
+
+    // Find the user by email in VerifiedUsers
+    let user = await VerifiedUsers.findOne({ email: resetToken.email });
+
+    if (user) {
+      // Update the password
+      user.password = password;
+
+      // Save the updated user
+      await user.save();
+    } else {
+      // Find the user by email in WardMembers
+      user = await WardMembers.findOne({ email: resetToken.email });
+
+      if (user) {
+        // Update the password
+        user.password = password;
+
+        // Save the updated user
+        await user.save();
+      } else {
+        return res.status(404).json({ success: false, message: 'User not found' });
+      }
+    }
+
+    // Delete the reset token after successful password reset
+    await resetToken.deleteOne();
+    console.log('sucessful');
+    res.status(200).json({ success: true, message: 'Password reset successful' });
+  } catch (error) {
+    console.error('Error resetting password:', error.message);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 
 
