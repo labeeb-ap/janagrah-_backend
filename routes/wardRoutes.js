@@ -155,7 +155,8 @@ router.post('/userapprove', async (req, res) => {
         from: 'akakhome22@gmail.com',
         to: user.email,
         subject: 'Janagrah Account Approved',
-        text: 'Your account has been approved and now you can login. Thank you for using Janagrah'
+        text: 'Congratulations, Your account has been approved and now you can login. Thank you for using Janagrah'
+        
       };
       
       transporter.sendMail(mailOptions, function(error, info){
@@ -212,8 +213,8 @@ router.post('/reject', async (req, res) => {
       var mailOptions = {
         from: 'akakhome22@gmail.com',
         to: user.email,
-        subject: 'Account Rejected ',
-        text: 'Your account has been Rejected.'
+        subject: 'Janagrah Account Rejected ',
+        text: 'Your janagrah account has been Rejected. please check again '
       };
       
       transporter.sendMail(mailOptions, function(error, info){
@@ -240,26 +241,9 @@ router.post('/reject', async (req, res) => {
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 router.post('/viewUser', async (req, res) => {
   try {
     const { wardmemberid } = req.body;
-
-    // Construct the query based on the provided fields
-  
 
     // Find all documents that match the query
     const users = await VerifiedUsers.find({wardmemberid:wardmemberid});
@@ -276,12 +260,6 @@ router.post('/viewUser', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
-
-
-
-
-
-
 
 
 router.post('/image', async (req, res) => {
@@ -304,81 +282,6 @@ router.post('/image', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
-
-
-/*router.post('/forgot', async (req, res) => {
-  try {
-    
-    const { email } = req.body;
-    ;
-   
-
-     // Find the user by email
-     const user = await VerifiedUsers.findOne({ email }) || await WardMembers.findOne({ email });
-
-    if (user) {
-      
-      var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'akakhome22@gmail.com',
-          pass: 'tjiu lgqe mqlu demz'
-        }
-      });
-      
-      var mailOptions = {
-        from: 'akakhome22@gmail.com',
-        to: email,
-        subject: 'Reset Password ',
-        text: 'http://localhost:3000/ResetPassword'
-      };
-      
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          console.log(error);
-          res.status(200).json({ success: false, message:"error sending email" });
-        } else {
-          console.log('Email sent: ' + info.response);
-          res.status(200).json({ success: true,message:"email sent" });
-        }
-      });
-      
-    } else if (ward) {
-      
-      var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'akakhome22@gmail.com',
-          pass: 'tjiu lgqe mqlu demz'
-        }
-      });
-      
-      var mailOptions = {
-        from: 'akakhome22@gmail.com',
-        to: email,
-        subject: 'Reset Password ',
-        text: 'http://localhost:3000/ResetPassword'
-      };
-      
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          console.log(error);
-          res.status(200).json({ success: false, message:"error sending email" });
-        } else {
-          console.log('Email sent: ' + info.response);
-          res.status(200).json({ success: true,message:"email sent" });
-        }
-      });
-      
-    } else {
-      console.log('No member found');
-      res.status(404).json({ success: false, message: 'member not registered' });
-    }
-  } catch (error) {
-    console.error('Error fetching ward:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});*/
 
 // Route to request a password reset link
 router.post('/forgot', async (req, res) => {
