@@ -81,33 +81,6 @@ router.post('/image', async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 router.post('/details', async (req, res) => {
     try {
       console.log("Complete Details of residents");

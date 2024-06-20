@@ -218,29 +218,4 @@ const polls = await Polls.find(query);
   
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-  
-  
-
-
-
-
-
 export default router;

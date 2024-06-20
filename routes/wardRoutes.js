@@ -98,24 +98,7 @@ router.post('/userRequests', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'your-email@gmail.com',
-    pass: 'your-email-password',
-  },
-});
 
-const sendEmail = (to, subject, text) => {
-  const mailOptions = {
-    from: 'your-email@gmail.com',
-    to,
-    subject,
-    text,
-  };
-
-  return transporter.sendMail(mailOptions);
-};
 
 router.post('/userapprove', async (req, res) => {
   try {
@@ -169,8 +152,8 @@ router.post('/userapprove', async (req, res) => {
       var mailOptions = {
         from: 'akakhome22@gmail.com',
         to: user.email,
-        subject: 'Account Approved ',
-        text: 'Your account has been approved.'
+        subject: 'Janagrah Account Approved',
+        text: 'Your account has been approved and now you can login. Thank you for using Janagrah'
       };
       
       transporter.sendMail(mailOptions, function(error, info){
@@ -356,11 +339,7 @@ router.post('/forgot', async (req, res) => {
         }
       });
       
-    } else {
-      console.log('No user found');
-      res.status(404).json({ success: false, message: 'user not registered' });
-    }
-    if (ward) {
+    } else if (ward) {
       
       var transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -399,7 +378,7 @@ router.post('/forgot', async (req, res) => {
 
 router.post('/reset', async (req, res) => {
   try {
-    console.log('Reset');
+    
     const { identifier, password } = req.body;
 
     // Find the user by email, username, or voter ID
@@ -411,13 +390,12 @@ router.post('/reset', async (req, res) => {
       ]
     });
 
-    if (!user) {
-      return res.status(404).json({ success: false, message: 'User not found' });
-    }
+    
 
     // Update the password
     user.password = password;
-
+    console.log(user.email)
+    console.log(user.password)
     // Save the updated user
     await user.save();
     const ward = await WardMembers.findOne({
@@ -428,9 +406,7 @@ router.post('/reset', async (req, res) => {
       ]
     });
 
-    if (!ward) {
-      return res.status(404).json({ success: false, message: 'member not found' });
-    }
+    
 
     // Update the password
     ward.password = password;
