@@ -3,7 +3,6 @@ import RequestedUsers from "../models/RequestedUsers.js";
 import WardMembers from '../models/WardMembers.js';
 import VerifiedUsers from '../models/VerifiedUsers.js';
 import nodemailer from 'nodemailer';
-import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import PasswordResetToken from '../models/ResetPassword.js';
 
@@ -55,14 +54,9 @@ router.post('/userlogin', async (req, res) => {
       console.log('exist')
       
       console.log(user);
-     // const token = jwt.sign({ userId: user._id, username: user.username }, 'janagrah',{ expiresIn: '1h' });
       res.status(200).json({ success: true, message: 'Login successful' ,user});
     } else {
       console.log('not exist'),
-      /*res.json({
-        "code": 100,
-        "message": "User does not exist"
-      })*/
       res.status(200).json({ success: false, message: 'Login unsuccessful' })
     }
 
@@ -111,8 +105,6 @@ router.post('/userapprove', async (req, res) => {
     if (user) {
       // Check if the username already exists in VerifiedUsers collection
       const existingUser = await VerifiedUsers.findOne({username:user.username });
-
-
       if (existingUser) {
         console.log('User with the provided username already exists in VerifiedUsers:', user.username);
         return res.status(400).json({ success: false, message: 'User with the provided username already approved ' });
@@ -289,7 +281,7 @@ router.post('/forgot', async (req, res) => {
     const { email } = req.body;
 
     // Find the user by email
-    const user = await VerifiedUsers.findOne({ email }) || await WardMembers.findOne({ email });
+    const user = await VerifiedUsers.findOne({ email }) || await wardmembers.findOne({ email });
 
     if (user) {
       // Generate a unique token
@@ -312,7 +304,7 @@ router.post('/forgot', async (req, res) => {
       var mailOptions = {
         from: 'akakhome22@gmail.com',
         to: email,
-        subject: 'Reset Password',
+        subject: 'Janagrah Account Reset Password',
         text: `Click the following link to reset your password: http://localhost:3000/ResetPassword/${token}`
       };
 
@@ -347,8 +339,6 @@ router.post('/reset-password/:token', async (req, res) => {
     const resetToken = await passwordresettokens.findOne({ token:token });
 
     // Validate token and password format/length here
-
-
     if (!/^[0-9a-fA-F]{32}$/.test(token)) {
       console.log('Invalid token format',token);
       return res.status(400).json({ success: false, message: 'Invalid token format' });
@@ -358,17 +348,12 @@ router.post('/reset-password/:token', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Invalid password format' });
     }
 
-   
-
     console.group(resetToken);
     if (!resetToken) {
       console.log('resettoken');
       return res.status(400).json({ success: false, message: 'Invalid or expired reset token' });
       
     }
-
-    
-
     // Find the user by email in VerifiedUsers
     let user = await VerifiedUsers.findOne({ email: resetToken.email });
 
@@ -380,7 +365,7 @@ router.post('/reset-password/:token', async (req, res) => {
       await user.save();
     } else {
       // Find the user by email in WardMembers
-      user = await WardMembers.findOne({ email: resetToken.email });
+      user = await wardmembers.findOne({ email: resetToken.email });
 
       if (user) {
         // Update the password
