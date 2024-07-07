@@ -51,7 +51,7 @@ const verifiedUserSchema = new Schema({
   username: {
     type: String,
     required: true,
-    unique: true, // Making username unique
+    unique: true, 
 
   },
   password: {
