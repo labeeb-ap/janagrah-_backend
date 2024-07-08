@@ -336,7 +336,7 @@ router.post('/reset-password/:token', async (req, res) => {
     const { password } = req.body;
     console.log(token);
     console.log(password);
-    const resetToken = await passwordresettokens.findOne({ token:token });
+    const resetToken = await PasswordResetToken.findOne({ token:token });
 
     // Validate token and password format/length here
     if (!/^[0-9a-fA-F]{32}$/.test(token)) {
