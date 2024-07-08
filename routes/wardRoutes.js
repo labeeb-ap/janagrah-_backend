@@ -259,7 +259,7 @@ router.post('/image', async (req, res) => {
     const { username } = req.body;
 
     // Find the user by username
-    const user = await wardmembers.findOne({ username });
+    const user = await WardMembers.findOne({ username });
 
     if (user) {
       console.log('User found:', user);
@@ -281,7 +281,7 @@ router.post('/forgot', async (req, res) => {
     const { email } = req.body;
 
     // Find the user by email
-    const user = await VerifiedUsers.findOne({ email }) || await wardmembers.findOne({ email });
+    const user = await VerifiedUsers.findOne({ email }) || await WardMembers.findOne({ email });
 
     if (user) {
       // Generate a unique token
@@ -365,7 +365,7 @@ router.post('/reset-password/:token', async (req, res) => {
       await user.save();
     } else {
       // Find the user by email in WardMembers
-      user = await wardmembers.findOne({ email: resetToken.email });
+      user = await WardMembers.findOne({ email: resetToken.email });
 
       if (user) {
         // Update the password
